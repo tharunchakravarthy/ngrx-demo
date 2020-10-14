@@ -1,9 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {select, Store} from "@ngrx/store";
-import {Observable} from "rxjs";
+import {from, Observable} from "rxjs";
 import {map} from 'rxjs/operators';
 import {NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router} from '@angular/router';
-
+import { AppState } from './reducers';
+import {isLoggedIn} from './auth/auth.selectors'
+import { logout } from './auth/auth.actions';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -13,7 +15,12 @@ export class AppComponent implements OnInit {
 
     loading = true;
 
-    constructor(private router: Router) {
+    isLoggedIn$: Observable<boolean>;
+
+    isLoggedOut$: Observable<boolean>;
+
+    constructor(private router: Router,
+      private store: Store<AppState>) {
 
     }
 
@@ -38,10 +45,23 @@ export class AppComponent implements OnInit {
         }
       });
 
+      this.isLoggedIn$ = this.store
+                          .pipe(
+                            select( //select instead of map prevents the duplicate values to reach html
+                              // state => !!state["auth"].user
+                              isLoggedIn
+                            )
+                          );
+      this.isLoggedOut$ = this.store
+                          .pipe(
+                            select(
+                              state => !state["auth"].user
+                            )
+                          )
     }
 
     logout() {
-
+      this.store.dispatch(logout());
     }
 
 }

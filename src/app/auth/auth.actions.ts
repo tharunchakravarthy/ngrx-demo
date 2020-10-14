@@ -8,5 +8,4 @@ export const login = createAction(//login is a function which creates action and
 
 export const logout = createAction(
   "[Top Menu] logout",
-  
 )

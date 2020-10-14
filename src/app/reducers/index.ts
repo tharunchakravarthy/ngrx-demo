@@ -1,3 +1,4 @@
+import { routerReducer } from '@ngrx/router-store';
 import {
   ActionReducer,
   ActionReducerMap,
@@ -12,7 +13,7 @@ export interface AppState {//corresponds to the global state in store
 }
 
 export const reducers: ActionReducerMap<AppState> = {
-
+  router: routerReducer
 };
 
 
